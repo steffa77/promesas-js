@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="formBuscador">
+        <input type="text" id="idnave" placeholder="Ejemplo: 9">
+        <button type="submit">Buscar</button>
+
+        <div>
+            <label>Nombre:</label>
+            <input type="text" id="nombre">
+        </div>
+        <div>
+            <label>Modelo:</label>
+            <input type="text" id="modelo">
+        </div>
+        <div>
+            <label>Fabricante:</label>
+            <input type="text" id="fabricante">
+        </div>
+        <div>
+            <label>Tripulación:</label>
+            <input type="text" id="tripulacion">
+        </div>
+        <div>
+            <label>Clase:</label>
+            <input type="text" id="clase">
+        </div>
+    </form>
+
+    <script>
+        const formulario = document.getElementById('formBuscador')
+        const id = document.getElementById('idnave')
+        const nombre = document.getElementById('nombre')
+        const modelo = document.getElementById('modelo')
+        const fabricante = document.getElementById('fabricante')
+        const tripulacion = document.getElementById('tripulacion')
+        const clase = document.getElementById('clase')
+
+        formulario.addEventListener("submit", (event) => {
+            event.preventDefault()
+            obtenerNave(id.value)
+        })
+
+        async function obtenerNave(id) {
+            const API_URL = `https://swapi.dev/api/starships/${id}`
+
+            try{
+              const respuesta = await fetch(API_URL)
+
+                if(!respuesta.ok) {
+                    nombre.value = ''
+                    modelo.value = ''
+                    fabricante.value = ''
+                    tripulacion.value = ''
+                    clase.value = ''
+                    alert('No existe esta nave')
+                    throw new Error('Error de comunicación')
+                }
+
+                const datos = await respuesta.json()
+
+                nombre.value = datos.name
+                modelo.value = datos.modelo
+                fabricante.value = datos.manufacturer
+                tripulacion.value = datos.crew
+                clase.value = datos.starship_class
+            } catch(e) {
+                console.error(e)
+            }
+        }
+    </script>
+</body>
+</html>

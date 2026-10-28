@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <form id="formBuscador">
+        <input type="text" id="idplaneta" placeholder="Ejemplo: 1">
+        <button type="submit">Buscar</button>
+
+        <div>
+            <label>Nombre:</label>
+            <input type="text" id="nombre">
+        </div>
+        <div>
+            <label>Clima:</label>
+            <input type="text" id="clima">
+        </div>
+        <div>
+            <label>Terreno:</label>
+            <input type="text" id="terreno">
+        </div>
+        <div>
+            <label>Gravedad:</label>
+            <input type="text" id="gravedad">
+        </div>
+        <div>
+            <label>Población:</label>
+            <input type="text" id="poblacion">
+        </div>
+    </form>
+
+    <script>
+        const formulario = document.getElementById('formBuscador')
+        const id = document.getElementById('idplaneta')
+        const nombre = document.getElementById('nombre')
+        const clima = document.getElementById('clima')
+        const terreno = document.getElementById('terreno')
+        const gravedad = document.getElementById('gravedad')
+        const poblacion = document.getElementById('poblacion')
+
+        formulario.addEventListener("submit", (event) =>{
+            event.preventDefault()
+            obtenerPlaneta(id.value)
+        })
+
+        async function obtenerPlaneta(id){
+            const API_URL = `https://swapi.dev/api/planets/${id}`
+
+            try{
+                const respuesta = await fetch(API_URL)
+
+                if (!respuesta.ok) {
+                    nombre.value = ''
+                    clima.value = ''
+                    terreno.value = ''
+                    gravedad.value = ''
+                    poblacion.value = ''
+                    alert('No existe este planeta')
+                    throw new Error('Error de comunicación')
+                }
+
+                const datos = await respuesta.json()
+
+                nombre.value = datos.name
+                clima.value = datos.climate
+                terreno.value = datos.terrain
+                gravedad.value = datos.gravity
+                poblacion.value = datos.population
+            } catch(e){
+                console.error(e)
+            }
+        }
+    </script>
+</body>
+</html>
